@@ -1,6 +1,7 @@
 import type { TEditorRecipientsFormSchema } from '@documenso/lib/client-only/hooks/use-editor-recipients';
 import { useCurrentEnvelopeEditor } from '@documenso/lib/client-only/providers/envelope-editor-provider';
 import { useCurrentOrganisation } from '@documenso/lib/client-only/providers/organisation';
+import { DocumentAuth } from '@documenso/lib/types/document-auth';
 import { isCcRecipient } from '@documenso/lib/utils/recipients';
 import { RecipientActionAuthSelect } from '@documenso/ui/components/recipient/recipient-action-auth-select';
 import {
@@ -11,6 +12,7 @@ import { RecipientRoleSelect } from '@documenso/ui/components/recipient/recipien
 import { cn } from '@documenso/ui/lib/utils';
 import { Button } from '@documenso/ui/primitives/button';
 import { FormControl, FormField, FormItem, FormMessage } from '@documenso/ui/primitives/form/form';
+import { Input } from '@documenso/ui/primitives/input';
 import type { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd';
 import { useLingui } from '@lingui/react/macro';
 import { EnvelopeType, type RecipientRole } from '@prisma/client';
@@ -202,26 +204,52 @@ const RecipientRowInner = ({
         </Button>
       </div>
 
-      {showAdvancedSettings && organisation.organisationClaim.flags.cfr21 && (
-        <FormField
-          control={form.control}
-          name={`signers.${signerIndex}.actionAuth`}
-          render={({ field }) => (
-            <FormItem
-              className={cn('mt-2 w-full', {
-                'mb-6': rowErrors && !rowErrors.actionAuth,
-                'pl-6': isSequential,
-              })}
-            >
-              <FormControl>
-                <RecipientActionAuthSelect {...field} onValueChange={field.onChange} disabled={isFieldDisabled} />
-              </FormControl>
+      {showAdvancedSettings &&
+        (organisation.organisationClaim.flags.cfr21 || organisation.organisationClaim.flags.smsVerification) && (
+          <div className={cn('mt-2 grid gap-2', { 'pl-6': isSequential })}>
+            <FormField
+              control={form.control}
+              name={`signers.${signerIndex}.actionAuth`}
+              render={({ field }) => (
+                <FormItem className={cn('w-full', { 'mb-6': rowErrors && !rowErrors.actionAuth })}>
+                  <FormControl>
+                    <RecipientActionAuthSelect
+                      {...field}
+                      onValueChange={field.onChange}
+                      disabled={isFieldDisabled}
+                      allowSms={organisation.organisationClaim.flags.smsVerification}
+                      allowEnterpriseActionAuth={organisation.organisationClaim.flags.cfr21}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      )}
+            {signer.actionAuth.includes(DocumentAuth.SMS) && (
+              <FormField
+                control={form.control}
+                name={`signers.${signerIndex}.phone`}
+                render={({ field }) => (
+                  <FormItem className={cn('w-full', { 'mb-6': rowErrors && !rowErrors.phone })}>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="tel"
+                        inputMode="tel"
+                        placeholder={t`Phone number in E.164 format, for example +34600123168`}
+                        aria-label={t`Recipient phone number`}
+                        disabled={isFieldDisabled}
+                        autoComplete="tel"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+          </div>
+        )}
     </fieldset>
   );
 };

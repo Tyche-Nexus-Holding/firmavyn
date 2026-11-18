@@ -5,7 +5,14 @@ import { ZAuthenticationResponseJSONSchema } from './webauthn';
 /**
  * All the available types of document authentication options for both access and action.
  */
-export const ZDocumentAuthTypesSchema = z.enum(['ACCOUNT', 'PASSKEY', 'TWO_FACTOR_AUTH', 'PASSWORD', 'EXPLICIT_NONE']);
+export const ZDocumentAuthTypesSchema = z.enum([
+  'ACCOUNT',
+  'PASSKEY',
+  'TWO_FACTOR_AUTH',
+  'PASSWORD',
+  'SMS',
+  'EXPLICIT_NONE',
+]);
 
 export const DocumentAuth = ZDocumentAuthTypesSchema.Enum;
 
@@ -34,6 +41,11 @@ const ZDocumentAuth2FASchema = z.object({
   method: z.enum(['email', 'authenticator']).default('authenticator').optional(),
 });
 
+const ZDocumentAuthSmsSchema = z.object({
+  type: z.literal(DocumentAuth.SMS),
+  code: z.string().regex(/^\d{6}$/),
+});
+
 /**
  * All the document auth methods for both accessing and actioning.
  */
@@ -43,6 +55,7 @@ export const ZDocumentAuthMethodsSchema = z.discriminatedUnion('type', [
   ZDocumentAuthPasskeySchema,
   ZDocumentAuth2FASchema,
   ZDocumentAuthPasswordSchema,
+  ZDocumentAuthSmsSchema,
 ]);
 
 /**
@@ -99,6 +112,7 @@ export const ZRecipientActionAuthSchema = z.discriminatedUnion('type', [
   ZDocumentAuth2FASchema,
   ZDocumentAuthPasswordSchema,
   ZDocumentAuthExplicitNoneSchema,
+  ZDocumentAuthSmsSchema,
 ]);
 export const ZRecipientActionAuthTypesSchema = z
   .enum([
@@ -106,6 +120,7 @@ export const ZRecipientActionAuthTypesSchema = z
     DocumentAuth.PASSKEY,
     DocumentAuth.TWO_FACTOR_AUTH,
     DocumentAuth.PASSWORD,
+    DocumentAuth.SMS,
     DocumentAuth.EXPLICIT_NONE,
   ])
   .describe('The type of authentication required for the recipient to sign the document.');

@@ -4,6 +4,7 @@ import {
   ZRecipientEmailSchema,
   ZRecipientSigningOrderSchema,
 } from '@documenso/lib/types/recipient';
+import { ZSmsPhoneNumberNullableSchema } from '@documenso/lib/types/sms';
 import { RecipientRole } from '@prisma/client';
 import { z } from 'zod';
 
@@ -21,6 +22,7 @@ export const createEnvelopeRecipientsMeta: TrpcRouteMeta = {
 
 export const ZCreateEnvelopeRecipientSchema = z.object({
   email: ZRecipientEmailSchema,
+  phone: ZSmsPhoneNumberNullableSchema.optional(),
   name: z.string().max(255),
   role: z.nativeEnum(RecipientRole),
   signingOrder: ZRecipientSigningOrderSchema.optional(),

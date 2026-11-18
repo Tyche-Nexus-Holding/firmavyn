@@ -188,6 +188,7 @@ export const EnvelopeEditorRecipientForm = () => {
       formId: nanoid(12),
       name: '',
       email: '',
+      phone: '',
       role: RecipientRole.SIGNER,
       actionAuth: [],
       signingOrder: undefined,
@@ -205,6 +206,7 @@ export const EnvelopeEditorRecipientForm = () => {
           formId: nanoid(12),
           name: recipient.name,
           email: recipient.email,
+          phone: '',
           role: recipient.role,
           actionAuth: [],
           signingOrder: index + 1,
@@ -227,6 +229,7 @@ export const EnvelopeEditorRecipientForm = () => {
         formId: nanoid(12),
         name: recipient.name,
         email: recipient.email,
+        phone: '',
         role: recipient.role,
         actionAuth: [],
         signingOrder: undefined,
@@ -265,6 +268,7 @@ export const EnvelopeEditorRecipientForm = () => {
           formId: nanoid(12),
           name: currentEditorName ?? '',
           email: currentEditorEmail ?? '',
+          phone: '',
           role: RecipientRole.SIGNER,
           actionAuth: [],
           signingOrder: undefined,
@@ -350,6 +354,7 @@ export const EnvelopeEditorRecipientForm = () => {
 
         return (
           signer.email !== recipient.email ||
+          (signer.phone || null) !== recipient.phone ||
           signer.name !== recipient.name ||
           signer.role !== recipient.role ||
           (signer.signingOrder ?? null) !== (recipient.signingOrder ?? null) ||
@@ -453,10 +458,12 @@ export const EnvelopeEditorRecipientForm = () => {
           <div
             className={cn('-mt-2 mb-2 space-y-4 rounded-md bg-accent/50 p-4', {
               hidden:
-                !editorConfig.recipients?.allowConfigureSigningOrder && !organisation.organisationClaim.flags.cfr21,
+                !editorConfig.recipients?.allowConfigureSigningOrder &&
+                !organisation.organisationClaim.flags.cfr21 &&
+                !organisation.organisationClaim.flags.smsVerification,
             })}
           >
-            {organisation.organisationClaim.flags.cfr21 && (
+            {(organisation.organisationClaim.flags.cfr21 || organisation.organisationClaim.flags.smsVerification) && (
               <div className="flex flex-row items-center">
                 <Checkbox
                   id="showAdvancedRecipientSettings"

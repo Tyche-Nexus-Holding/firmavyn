@@ -26,6 +26,10 @@ export const DOCUMENT_AUTH_TYPES: Record<string, DocumentAuthTypeData> = {
     key: DocumentAuth.PASSWORD,
     value: msg`Require password`,
   },
+  [DocumentAuth.SMS]: {
+    key: DocumentAuth.SMS,
+    value: msg`Require SMS code`,
+  },
   [DocumentAuth.EXPLICIT_NONE]: {
     key: DocumentAuth.EXPLICIT_NONE,
     value: msg`None (Overrides global settings)`,

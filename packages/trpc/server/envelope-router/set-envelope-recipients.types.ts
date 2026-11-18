@@ -4,6 +4,7 @@ import {
   ZRecipientLiteSchema,
   ZRecipientSigningOrderSchema,
 } from '@documenso/lib/types/recipient';
+import { ZSmsPhoneNumberNullableSchema } from '@documenso/lib/types/sms';
 import { EnvelopeType, RecipientRole } from '@prisma/client';
 import { z } from 'zod';
 
@@ -14,6 +15,7 @@ export const ZSetEnvelopeRecipientSchema = z.object({
     .optional()
     .describe('A temporary ID echoed back on the response so newly created recipients can be reconciled'),
   email: ZRecipientEmailSchema,
+  phone: ZSmsPhoneNumberNullableSchema.optional(),
   name: z.string().max(255),
   role: z.nativeEnum(RecipientRole),
   signingOrder: ZRecipientSigningOrderSchema.optional(),

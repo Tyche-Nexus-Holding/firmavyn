@@ -16,6 +16,7 @@ import { DocumentSigningAuthAccount } from './document-signing-auth-account';
 import { DocumentSigningAuthPasskey } from './document-signing-auth-passkey';
 import { DocumentSigningAuthPassword } from './document-signing-auth-password';
 import { useRequiredDocumentSigningAuthContext } from './document-signing-auth-provider';
+import { DocumentSigningAuthSms } from './document-signing-auth-sms';
 
 export type DocumentSigningAuthDialogProps = {
   title?: string;
@@ -124,6 +125,7 @@ export const DocumentSigningAuthDialog = ({
                         .with(DocumentAuth.PASSKEY, () => <Trans>Passkey</Trans>)
                         .with(DocumentAuth.TWO_FACTOR_AUTH, () => <Trans>2FA</Trans>)
                         .with(DocumentAuth.PASSWORD, () => <Trans>Password</Trans>)
+                        .with(DocumentAuth.SMS, () => <Trans>SMS</Trans>)
                         .exhaustive()}
                     </div>
 
@@ -133,6 +135,7 @@ export const DocumentSigningAuthDialog = ({
                         .with(DocumentAuth.PASSKEY, () => <Trans>Use your passkey for authentication</Trans>)
                         .with(DocumentAuth.TWO_FACTOR_AUTH, () => <Trans>Enter your 2FA code</Trans>)
                         .with(DocumentAuth.PASSWORD, () => <Trans>Enter your password</Trans>)
+                        .with(DocumentAuth.SMS, () => <Trans>Receive a 6-digit code by SMS</Trans>)
                         .exhaustive()}
                     </div>
                   </div>
@@ -168,6 +171,9 @@ export const DocumentSigningAuthDialog = ({
                 onOpenChange={onOpenChange}
                 onReauthFormSubmit={onReauthFormSubmit}
               />
+            ))
+            .with({ documentAuthType: DocumentAuth.SMS }, () => (
+              <DocumentSigningAuthSms open={open} onOpenChange={onOpenChange} onReauthFormSubmit={onReauthFormSubmit} />
             ))
             .with({ documentAuthType: DocumentAuth.EXPLICIT_NONE }, () => null)
             .exhaustive()}

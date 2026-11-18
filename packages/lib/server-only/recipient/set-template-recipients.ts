@@ -14,6 +14,7 @@ import { type EnvelopeIdOptions, mapSecondaryIdToTemplateId } from '../../utils/
 import { getEnvelopeWhereInput } from '../envelope/get-envelope-by-id';
 import { assertCompatibleRecipientGrouping } from '../signature-level/assert-compatible-recipient-grouping';
 import { assertCompatibleRecipientRole } from '../signature-level/assert-compatible-recipient-role';
+import { assertRecipientActionAuthAllowed } from '../sms/assert-recipient-action-auth-allowed';
 import { resolveReplacedRecipientSigningOrders } from './assign-omitted-recipient-signing-orders';
 
 export type SetTemplateRecipientsOptions = {
@@ -52,16 +53,10 @@ export const setTemplateRecipients = async ({ userId, teamId, id, recipients }: 
     throw new Error('Template not found');
   }
 
-  const recipientsHaveActionAuth = recipients.some(
-    (recipient) => recipient.actionAuth && recipient.actionAuth.length > 0,
-  );
-
-  // Check if user has permission to set the global action auth.
-  if (recipientsHaveActionAuth && !envelope.team.organisation.organisationClaim.flags.cfr21) {
-    throw new AppError(AppErrorCode.UNAUTHORIZED, {
-      message: 'You do not have permission to set the action auth',
-    });
-  }
+  assertRecipientActionAuthAllowed({
+    actionAuth: recipients.map((recipient) => recipient.actionAuth),
+    flags: envelope.team.organisation.organisationClaim.flags,
+  });
 
   for (const recipient of recipients) {
     assertCompatibleRecipientRole({
@@ -152,6 +147,7 @@ export const setTemplateRecipients = async ({ userId, teamId, id, recipients }: 
           update: {
             name: recipient.name,
             email: recipient.email,
+            phone: recipient.phone || null,
             role: recipient.role,
             signingOrder: recipient.signingOrder,
             envelopeId: envelope.id,
@@ -160,6 +156,7 @@ export const setTemplateRecipients = async ({ userId, teamId, id, recipients }: 
           create: {
             name: recipient.name,
             email: recipient.email,
+            phone: recipient.phone || null,
             role: recipient.role,
             signingOrder: recipient.signingOrder,
             token: nanoid(),
@@ -222,6 +219,7 @@ type RecipientData = {
   id?: number;
   clientId?: string | null;
   email: string;
+  phone?: string | null;
   name: string;
   role: RecipientRole;
   signingOrder?: number | null;

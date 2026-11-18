@@ -12,12 +12,13 @@ import { extractDocumentAuthMethods } from '../../utils/document-auth';
 import { validateTwoFactorTokenFromEmail } from '../2fa/email/validate-2fa-token-from-email';
 import { verifyTwoFactorAuthenticationToken } from '../2fa/verify-2fa-token';
 import { verifyPassword } from '../2fa/verify-password';
+import { verifySmsVerification } from '../sms/verify-sms-verification';
 
 type IsRecipientAuthorizedOptions = {
   // !: Probably find a better name than 'ACCESS_2FA' if requirements change.
   type: 'ACCESS' | 'ACCESS_2FA' | 'ACTION';
   documentAuthOptions: Envelope['authOptions'];
-  recipient: Pick<Recipient, 'authOptions' | 'email' | 'envelopeId'>;
+  recipient: Pick<Recipient, 'id' | 'authOptions' | 'email' | 'envelopeId'>;
 
   /**
    * The ID of the user who initiated the request.
@@ -161,6 +162,12 @@ export const isRecipientAuthorized = async ({
       return await verifyPassword({
         userId,
         password,
+      });
+    })
+    .with({ type: DocumentAuth.SMS }, async ({ code }) => {
+      return await verifySmsVerification({
+        recipientId: recipient.id,
+        code,
       });
     })
     .with({ type: DocumentAuth.EXPLICIT_NONE }, () => {

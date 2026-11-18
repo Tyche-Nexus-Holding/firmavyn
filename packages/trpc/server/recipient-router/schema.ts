@@ -6,6 +6,7 @@ import {
   ZRecipientActionAuthTypesSchema,
 } from '@documenso/lib/types/document-auth';
 import { ZRecipientLiteSchema, ZRecipientSchema, ZRecipientSigningOrderSchema } from '@documenso/lib/types/recipient';
+import { ZSmsPhoneNumberNullableSchema } from '@documenso/lib/types/sms';
 import { zEmail } from '@documenso/lib/utils/zod';
 import { RecipientRole } from '@prisma/client';
 import { z } from 'zod';
@@ -25,6 +26,7 @@ export const ZGetRecipientResponseSchema = ZRecipientSchema;
  */
 export const ZCreateRecipientSchema = z.object({
   email: zEmail().toLowerCase().min(1).max(254),
+  phone: ZSmsPhoneNumberNullableSchema.optional(),
   name: z.string().max(255),
   role: z.nativeEnum(RecipientRole),
   signingOrder: ZRecipientSigningOrderSchema.optional(),
@@ -35,6 +37,7 @@ export const ZCreateRecipientSchema = z.object({
 export const ZUpdateRecipientSchema = z.object({
   id: z.number().describe('The ID of the recipient to update.'),
   email: zEmail().toLowerCase().min(1).max(254).optional(),
+  phone: ZSmsPhoneNumberNullableSchema.optional(),
   name: z.string().max(255).optional(),
   role: z.nativeEnum(RecipientRole).optional(),
   signingOrder: ZRecipientSigningOrderSchema.optional(),
@@ -84,6 +87,7 @@ export const ZSetDocumentRecipientsRequestSchema = z.object({
     z.object({
       id: z.number().optional(),
       email: zEmail().toLowerCase().min(1).max(254),
+      phone: ZSmsPhoneNumberNullableSchema.optional(),
       name: z.string().max(255),
       role: z.nativeEnum(RecipientRole),
       signingOrder: ZRecipientSigningOrderSchema.optional(),
@@ -147,6 +151,7 @@ export const ZSetTemplateRecipientsRequestSchema = z.object({
           { message: 'Please enter a valid email address' },
         ),
       name: z.string(),
+      phone: ZSmsPhoneNumberNullableSchema.optional(),
       role: z.nativeEnum(RecipientRole),
       signingOrder: ZRecipientSigningOrderSchema.optional(),
       actionAuth: z.array(ZRecipientActionAuthTypesSchema).optional().default([]),

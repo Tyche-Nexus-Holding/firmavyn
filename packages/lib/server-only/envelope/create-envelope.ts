@@ -42,6 +42,7 @@ import { assignOmittedRecipientSigningOrders } from '../recipient/assign-omitted
 import { assertCompatibleRecipientGrouping } from '../signature-level/assert-compatible-recipient-grouping';
 import { assertCompatibleRecipientRole } from '../signature-level/assert-compatible-recipient-role';
 import { resolveSignatureLevel } from '../signature-level/resolve-signature-level';
+import { assertRecipientActionAuthAllowed } from '../sms/assert-recipient-action-auth-allowed';
 import { getTeamSettings } from '../team/get-team-settings';
 import { assertUserNotDisabledById } from '../user/assert-user-not-disabled';
 import { triggerWebhook } from '../webhooks/trigger/trigger-webhook';
@@ -57,6 +58,7 @@ type CreateEnvelopeRecipientFieldOptions = TFieldAndMeta & {
 
 type CreateEnvelopeRecipientOptions = {
   email: string;
+  phone?: string | null;
   name: string;
   role: RecipientRole;
   signingOrder?: number;
@@ -264,19 +266,16 @@ export const createEnvelope = async ({
     globalActionAuth: globalActionAuth || [],
   });
 
-  const recipientsHaveActionAuth = data.recipients?.some(
-    (recipient) => recipient.actionAuth && recipient.actionAuth.length > 0,
-  );
-
-  // Check if user has permission to set the global action auth.
-  if (
-    (authOptions.globalActionAuth.length > 0 || recipientsHaveActionAuth) &&
-    !team.organisation.organisationClaim.flags.cfr21
-  ) {
+  if (authOptions.globalActionAuth.length > 0 && !team.organisation.organisationClaim.flags.cfr21) {
     throw new AppError(AppErrorCode.UNAUTHORIZED, {
       message: 'You do not have permission to set the action auth',
     });
   }
+
+  assertRecipientActionAuthAllowed({
+    actionAuth: (data.recipients ?? []).map((recipient) => recipient.actionAuth),
+    flags: team.organisation.organisationClaim.flags,
+  });
 
   for (const recipient of data.recipients ?? []) {
     assertCompatibleRecipientRole({ signatureLevel, role: recipient.role });
@@ -466,6 +465,7 @@ export const createEnvelope = async ({
             envelopeId: envelope.id,
             name: recipient.name,
             email: recipient.email,
+            phone: recipient.phone || null,
             role: recipient.role,
             signingOrder: recipient.signingOrder,
             token: nanoid(),

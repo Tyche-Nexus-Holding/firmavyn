@@ -309,6 +309,7 @@ export const recipientRouter = router({
         recipients: recipients.map((recipient) => ({
           id: recipient.id,
           email: recipient.email,
+          phone: recipient.phone,
           name: recipient.name,
           role: recipient.role,
           signingOrder: recipient.signingOrder,
@@ -576,6 +577,7 @@ export const recipientRouter = router({
         recipients: recipients.map((recipient) => ({
           id: recipient.id,
           email: recipient.email,
+          phone: recipient.phone,
           name: recipient.name,
           role: recipient.role,
           signingOrder: recipient.signingOrder,

@@ -31,6 +31,7 @@ import { useRequiredDocumentSigningContext } from './document-signing-provider';
 const NON_AUTO_SIGNABLE_ACTION_AUTH_TYPES: string[] = [
   DocumentAuth.PASSKEY,
   DocumentAuth.PASSWORD,
+  DocumentAuth.SMS,
   DocumentAuth.TWO_FACTOR_AUTH,
 ];
 
@@ -106,7 +107,7 @@ export const DocumentSigningAutoSign = ({ recipient, fields }: DocumentSigningAu
           }))
           .with(undefined, () => undefined)
           .with(
-            P.union(DocumentAuth.PASSKEY, DocumentAuth.TWO_FACTOR_AUTH, DocumentAuth.PASSWORD),
+            P.union(DocumentAuth.PASSKEY, DocumentAuth.TWO_FACTOR_AUTH, DocumentAuth.PASSWORD, DocumentAuth.SMS),
             // This is a bit dirty, but the sentinel value used here is incredibly short-lived.
             () => 'NOT_SUPPORTED' as const,
           )

@@ -56,6 +56,11 @@ export const ZDocumentAuditLogTypeSchema = z.enum([
   'DOCUMENT_ACCESS_AUTH_2FA_VALIDATED', // When ACCESS AUTH 2FA is successfully validated.
   'DOCUMENT_ACCESS_AUTH_2FA_FAILED', // When ACCESS AUTH 2FA validation fails.
 
+  // ACTION AUTH SMS events.
+  'DOCUMENT_ACTION_AUTH_SMS_SENT',
+  'DOCUMENT_ACTION_AUTH_SMS_VERIFIED',
+  'DOCUMENT_ACTION_AUTH_SMS_FAILED',
+
   // CSC / TSP signing events.
   'DOCUMENT_RECIPIENT_CSC_AUTHENTICATED', // Service-scope OAuth complete; CSC credential persisted.
   'DOCUMENT_RECIPIENT_CSC_AUTHENTICATION_FAILED', // Service-scope OAuth completed but TSP returned a blocking error (empty credential list / invalid cert / refused algorithm).
@@ -617,6 +622,35 @@ export const ZDocumentAuditLogEventDocumentRecipientFailed2FAEmailSchema = z.obj
   }),
 });
 
+const ZDocumentAuditLogSmsDataSchema = z.object({
+  recipientEmail: z.string(),
+  recipientName: z.string(),
+  recipientId: z.number(),
+  phoneNumber: z.string(),
+});
+
+export const ZDocumentAuditLogEventDocumentActionAuthSmsSentSchema = z.object({
+  type: z.literal(DOCUMENT_AUDIT_LOG_TYPE.DOCUMENT_ACTION_AUTH_SMS_SENT),
+  data: ZDocumentAuditLogSmsDataSchema.extend({
+    sentAt: z.coerce.date(),
+  }),
+});
+
+export const ZDocumentAuditLogEventDocumentActionAuthSmsVerifiedSchema = z.object({
+  type: z.literal(DOCUMENT_AUDIT_LOG_TYPE.DOCUMENT_ACTION_AUTH_SMS_VERIFIED),
+  data: ZDocumentAuditLogSmsDataSchema.extend({
+    verifiedAt: z.coerce.date(),
+  }),
+});
+
+export const ZDocumentAuditLogEventDocumentActionAuthSmsFailedSchema = z.object({
+  type: z.literal(DOCUMENT_AUDIT_LOG_TYPE.DOCUMENT_ACTION_AUTH_SMS_FAILED),
+  data: ZDocumentAuditLogSmsDataSchema.extend({
+    failedAt: z.coerce.date(),
+    reason: z.enum(['INCORRECT', 'EXPIRED', 'TOO_MANY_ATTEMPTS']),
+  }),
+});
+
 /**
  * Event: Document sent.
  */
@@ -859,6 +893,9 @@ export const ZDocumentAuditLogSchema = ZDocumentAuditLogBaseSchema.and(
     ZDocumentAuditLogEventDocumentRecipientRequested2FAEmailSchema,
     ZDocumentAuditLogEventDocumentRecipientValidated2FAEmailSchema,
     ZDocumentAuditLogEventDocumentRecipientFailed2FAEmailSchema,
+    ZDocumentAuditLogEventDocumentActionAuthSmsSentSchema,
+    ZDocumentAuditLogEventDocumentActionAuthSmsVerifiedSchema,
+    ZDocumentAuditLogEventDocumentActionAuthSmsFailedSchema,
     ZDocumentAuditLogEventDocumentSentSchema,
     ZDocumentAuditLogEventDocumentTitleUpdatedSchema,
     ZDocumentAuditLogEventDocumentExternalIdUpdatedSchema,

@@ -14,6 +14,7 @@ import { assertEnvelopeMutable } from '../envelope/assert-envelope-mutable';
 import { getEnvelopeWhereInput } from '../envelope/get-envelope-by-id';
 import { assertCompatibleRecipientGrouping } from '../signature-level/assert-compatible-recipient-grouping';
 import { assertCompatibleRecipientRole } from '../signature-level/assert-compatible-recipient-role';
+import { assertRecipientActionAuthAllowed } from '../sms/assert-recipient-action-auth-allowed';
 import { assignOmittedRecipientSigningOrders } from './assign-omitted-recipient-signing-orders';
 
 export interface CreateEnvelopeRecipientsOptions {
@@ -22,6 +23,7 @@ export interface CreateEnvelopeRecipientsOptions {
   id: EnvelopeIdOptions;
   recipients: {
     email: string;
+    phone?: string | null;
     name: string;
     role: RecipientRole;
     signingOrder?: number | null;
@@ -74,16 +76,10 @@ export const createEnvelopeRecipients = async ({
     });
   }
 
-  const recipientsHaveActionAuth = recipientsToCreate.some(
-    (recipient) => recipient.actionAuth && recipient.actionAuth.length > 0,
-  );
-
-  // Check if user has permission to set the global action auth.
-  if (recipientsHaveActionAuth && !envelope.team.organisation.organisationClaim.flags.cfr21) {
-    throw new AppError(AppErrorCode.UNAUTHORIZED, {
-      message: 'You do not have permission to set the action auth',
-    });
-  }
+  assertRecipientActionAuthAllowed({
+    actionAuth: recipientsToCreate.map((recipient) => recipient.actionAuth),
+    flags: envelope.team.organisation.organisationClaim.flags,
+  });
 
   for (const recipient of recipientsToCreate) {
     assertCompatibleRecipientRole({
@@ -130,6 +126,7 @@ export const createEnvelopeRecipients = async ({
             envelopeId: envelope.id,
             name: recipient.name,
             email: recipient.email,
+            phone: recipient.phone || null,
             role: recipient.role,
             signingOrder: recipient.signingOrder,
             token: nanoid(),
