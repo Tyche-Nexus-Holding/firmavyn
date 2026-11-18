@@ -557,6 +557,21 @@ export const formatDocumentAuditLogAction = (i18n: I18n, auditLog: TDocumentAudi
       you: msg`You failed to validate a 2FA token for the document`,
       user: msg`${user} failed to validate a 2FA token for the document`,
     }))
+    .with({ type: DOCUMENT_AUDIT_LOG_TYPE.DOCUMENT_ACTION_AUTH_SMS_SENT }, ({ data }) => ({
+      anonymous: msg`SMS verification code sent to ${data.phoneNumber}`,
+      you: msg`SMS verification code sent to ${data.phoneNumber}`,
+      user: msg`SMS verification code sent to ${data.phoneNumber}`,
+    }))
+    .with({ type: DOCUMENT_AUDIT_LOG_TYPE.DOCUMENT_ACTION_AUTH_SMS_VERIFIED }, () => ({
+      anonymous: msg`Recipient verified the SMS code`,
+      you: msg`You verified the SMS code`,
+      user: msg`${user} verified the SMS code`,
+    }))
+    .with({ type: DOCUMENT_AUDIT_LOG_TYPE.DOCUMENT_ACTION_AUTH_SMS_FAILED }, () => ({
+      anonymous: msg`Recipient failed SMS verification`,
+      you: msg`Your SMS verification failed`,
+      user: msg`${user}'s SMS verification failed`,
+    }))
     .with({ type: DOCUMENT_AUDIT_LOG_TYPE.EMAIL_SENT }, ({ data }) => {
       if (data.isResending) {
         return {

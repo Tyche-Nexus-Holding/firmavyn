@@ -18,6 +18,7 @@ const BACKPORT_SUBSCRIPTION_CLAIM_JOB_DEFINITION_SCHEMA = z.object({
     embedSigning: z.literal(true).optional(),
     embedSigningWhiteLabel: z.literal(true).optional(),
     cfr21: z.literal(true).optional(),
+    smsVerification: z.literal(true).optional(),
     hipaa: z.literal(true).optional(),
     signingReminders: z.literal(true).optional(),
     cscQesSigning: z.literal(true).optional(),

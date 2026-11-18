@@ -172,8 +172,9 @@ export const DocumentSigningAuthProvider = ({
   // Assume that a user must be logged in for any auth requirements.
   const isAuthRedirectRequired = Boolean(
     derivedRecipientActionAuth &&
-      derivedRecipientActionAuth.length > 0 &&
-      !derivedRecipientActionAuth.includes(DocumentAuth.EXPLICIT_NONE) &&
+      derivedRecipientActionAuth.some(
+        (authType) => authType !== DocumentAuth.EXPLICIT_NONE && authType !== DocumentAuth.SMS,
+      ) &&
       user?.email !== recipient.email,
   );
 

@@ -68,6 +68,12 @@ export const ZClaimFlagsSchema = z.object({
 
   cfr21: z.boolean().optional(),
 
+  /**
+   * Temporary plan flag for Firmavyn SMS verification.
+   * False/absent is Free; true is Basic until a plan model exists.
+   */
+  smsVerification: z.boolean().optional(),
+
   hipaa: z.boolean().optional(),
 
   authenticationPortal: z.boolean().optional(),
@@ -136,6 +142,10 @@ export const SUBSCRIPTION_CLAIM_FEATURE_FLAGS: Record<
     key: 'cfr21',
     label: '21 CFR',
     isEnterprise: true,
+  },
+  smsVerification: {
+    key: 'smsVerification',
+    label: 'SMS verification (Basic plan)',
   },
   hipaa: {
     key: 'hipaa',

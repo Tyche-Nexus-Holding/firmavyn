@@ -287,6 +287,7 @@ export const createDocumentFromDirectTemplate = async ({
       const derivedRecipientActionAuth = await validateFieldAuth({
         documentAuthOptions: directTemplateEnvelope.authOptions,
         recipient: {
+          id: directTemplateRecipient.id,
           authOptions: directTemplateRecipient.authOptions,
           email: directRecipientEmail,
           envelopeId: directTemplateEnvelope.id,
@@ -421,6 +422,7 @@ export const createDocumentFromDirectTemplate = async ({
 
               return {
                 email: recipient.email,
+                phone: recipient.phone,
                 name: recipient.name,
                 role: recipient.role,
                 authOptions: createRecipientAuthOptions({
@@ -491,6 +493,7 @@ export const createDocumentFromDirectTemplate = async ({
       data: {
         envelopeId: createdEnvelope.id,
         email: directRecipientEmail,
+        phone: directTemplateRecipient.phone,
         name: directRecipientName,
         authOptions: createRecipientAuthOptions({
           accessAuth: directTemplateRecipientAuthOptions.accessAuth,

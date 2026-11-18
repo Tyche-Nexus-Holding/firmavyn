@@ -738,6 +738,10 @@ msgid "{user} validated a 2FA token for the document"
 msgstr "{user} validó un token 2FA para el documento"
 
 #: packages/lib/utils/document-audit-logs.ts
+msgid "{user} verified the SMS code"
+msgstr "{user} verificó el código SMS"
+
+#: packages/lib/utils/document-audit-logs.ts
 #: packages/lib/utils/document-audit-logs.ts
 msgid "{user} viewed the document"
 msgstr "{user} vio el documento"
@@ -749,6 +753,10 @@ msgstr "Se aplicó la firma remota de {user}"
 #: packages/lib/utils/document-audit-logs.ts
 msgid "{user}'s signing provider authentication failed"
 msgstr "Falló la autenticación de {user} con el proveedor de firma"
+
+#: packages/lib/utils/document-audit-logs.ts
+msgid "{user}'s SMS verification failed"
+msgstr "Falló la verificación por SMS de {user}"
 
 #: apps/remix/app/components/tables/internal-audit-log-table.tsx
 #: packages/lib/server-only/pdf/render-audit-logs.ts
@@ -939,6 +947,10 @@ msgstr "<0>Requerir clave de acceso</0> - El destinatario debe tener una cuenta 
 msgid "<0>Require password</0> - The recipient must have an account and password configured via their settings, the password will be verified during signing"
 msgstr "<0>Requerir contraseña</0> - El destinatario debe tener una cuenta y contraseña configurada a través de sus configuraciones, la contraseña se verificará durante la firma"
 
+#: packages/ui/components/recipient/recipient-action-auth-select.tsx
+msgid "<0>Require SMS code</0> - Send a 6-digit code to the recipient's phone"
+msgstr "<0>Requerir código SMS</0> - Envía un código de 6 dígitos al teléfono del destinatario"
+
 #: packages/ui/components/document/document-signature-settings-tooltip.tsx
 msgid "<0>Typed</0> - A signature that is typed using a keyboard."
 msgstr "<0>Escrito</0> - Una firma que se escribe usando un teclado."
@@ -1057,6 +1069,10 @@ msgstr "500 Error Interno del Servidor"
 msgid "6 months"
 msgstr "6 meses"
 
+#: apps/remix/app/components/general/document-signing/document-signing-auth-sms.tsx
+msgid "6-digit SMS code"
+msgstr "Código SMS de 6 dígitos"
+
 #: apps/remix/app/components/dialogs/token-create-dialog.tsx
 msgid "7 days"
 msgstr "7 días"
@@ -1132,6 +1148,10 @@ msgstr "Un nuevo miembro se ha unido a tu organización {organisationName}"
 #: apps/remix/app/routes/_unauthenticated+/check-email.tsx
 msgid "A password reset email has been sent, if you have an account you should see it in your inbox shortly."
 msgstr "Se ha enviado un correo electrónico para restablecer la contraseña, si tienes una cuenta deberías verlo en tu bandeja de entrada en breve."
+
+#: packages/lib/client-only/hooks/use-editor-recipients.ts
+msgid "A phone number is required for SMS verification"
+msgstr "Se necesita un número de teléfono para la verificación por SMS"
 
 #: packages/email/template-components/template-recipient-removed-by-admin.tsx
 #: packages/lib/jobs/definitions/emails/send-admin-recipient-removed-emails.handler.ts
@@ -2459,6 +2479,11 @@ msgstr ""
 msgid "Automatically sign fields"
 msgstr "Firmar campos automáticamente"
 
+#: apps/remix/app/components/general/document-signing/document-signing-auth-sms.tsx
+#: packages/ui/components/recipient/recipient-action-auth-select.tsx
+msgid "Available on the Basic plan"
+msgstr "Disponible en el plan Básico"
+
 #: apps/remix/app/components/forms/avatar-image.tsx
 msgid "Avatar"
 msgstr "Avatar"
@@ -2822,6 +2847,7 @@ msgstr "¿No puedes encontrar a alguien?"
 #: apps/remix/app/components/general/document-signing/document-signing-auth-passkey.tsx
 #: apps/remix/app/components/general/document-signing/document-signing-auth-passkey.tsx
 #: apps/remix/app/components/general/document-signing/document-signing-auth-password.tsx
+#: apps/remix/app/components/general/document-signing/document-signing-auth-sms.tsx
 #: apps/remix/app/components/general/document-signing/document-signing-auto-sign.tsx
 #: apps/remix/app/components/general/document-signing/document-signing-complete-dialog.tsx
 #: apps/remix/app/components/general/document-signing/document-signing-form.tsx
@@ -3121,6 +3147,10 @@ msgstr "Se requiere secreto del cliente"
 #: packages/ui/primitives/sheet.tsx
 msgid "Close"
 msgstr "Cerrar"
+
+#: apps/remix/app/components/general/document-signing/document-signing-auth-sms.tsx
+msgid "Code not valid"
+msgstr "Código no válido"
 
 #: apps/remix/app/components/general/document-signing/document-signing-page-view-v2.tsx
 msgid "Collapse sidebar"
@@ -5771,6 +5801,10 @@ msgstr ""
 #: apps/remix/app/components/dialogs/sign-field-text-dialog.tsx
 msgid "Enter Text"
 msgstr "Ingresar texto"
+
+#: apps/remix/app/components/general/document-signing/document-signing-auth-sms.tsx
+msgid "Enter the 6-digit code"
+msgstr "Introduce el código de 6 dígitos"
 
 #: apps/remix/app/components/forms/2fa/two-factor-code-dialog.tsx
 msgid "Enter the code from your authenticator app to continue."
@@ -9001,6 +9035,10 @@ msgstr "Cuenta personal"
 msgid "Personal Inbox"
 msgstr "Bandeja de entrada personal"
 
+#: apps/remix/app/components/general/envelope-editor/recipient-row.tsx
+msgid "Phone number in E.164 format, for example +34600123168"
+msgstr "Número de teléfono en formato E.164, por ejemplo +34600123168"
+
 #: apps/remix/app/components/forms/editor/editor-field-checkbox-form.tsx
 #: packages/ui/primitives/document-flow/field-items-advanced-settings/checkbox-field.tsx
 msgid "Pick a number"
@@ -9547,6 +9585,10 @@ msgstr "Se requiere reautenticación para firmar este campo"
 msgid "Reauthorise and retry"
 msgstr "Volver a autorizar e intentar de nuevo"
 
+#: apps/remix/app/components/general/document-signing/document-signing-auth-dialog.tsx
+msgid "Receive a 6-digit code by SMS"
+msgstr "Recibe un código de 6 dígitos por SMS"
+
 #: packages/ui/components/recipient/recipient-role-select.tsx
 msgid "Receives copy"
 msgstr "Recibe copia"
@@ -9619,6 +9661,10 @@ msgid "Recipient expired email"
 msgstr "Correo electrónico de destinatario vencido"
 
 #: packages/lib/utils/document-audit-logs.ts
+msgid "Recipient failed SMS verification"
+msgstr "El destinatario falló la verificación por SMS"
+
+#: packages/lib/utils/document-audit-logs.ts
 msgid "Recipient failed to validate a 2FA token for the document"
 msgstr "El destinatario no pudo validar un token 2FA para el documento"
 
@@ -9626,6 +9672,10 @@ msgstr "El destinatario no pudo validar un token 2FA para el documento"
 #: packages/ui/primitives/document-flow/field-item.tsx
 msgid "Recipient ID:"
 msgstr "ID de destinatario:"
+
+#: apps/remix/app/components/general/envelope-editor/recipient-row.tsx
+msgid "Recipient phone number"
+msgstr "Número de teléfono del destinatario"
 
 #: packages/lib/utils/document-audit-logs.ts
 msgid "Recipient rejected the document"
@@ -9684,6 +9734,10 @@ msgstr "Destinatario actualizado"
 #: packages/lib/utils/document-audit-logs.ts
 msgid "Recipient validated a 2FA token for the document"
 msgstr "El destinatario validó un token 2FA para el documento"
+
+#: packages/lib/utils/document-audit-logs.ts
+msgid "Recipient verified the SMS code"
+msgstr "El destinatario verificó el código SMS"
 
 #: packages/lib/utils/document-audit-logs.ts
 msgid "Recipient viewed the document"
@@ -10022,6 +10076,10 @@ msgstr "Informes"
 msgid "Request"
 msgstr "Solicitud"
 
+#: apps/remix/app/components/general/document-signing/document-signing-auth-sms.tsx
+msgid "Request another code in {secondsUntilRetry} seconds"
+msgstr "Solicita otro código en {secondsUntilRetry} segundos"
+
 #: apps/remix/app/routes/_unauthenticated+/organisation.sso.confirmation.$token.tsx
 msgid "Requesting Organisation"
 msgstr "Organización solicitante"
@@ -10041,6 +10099,10 @@ msgstr "Requerir llave de acceso"
 #: packages/lib/constants/document-auth.ts
 msgid "Require password"
 msgstr "Requerir contraseña"
+
+#: packages/lib/constants/document-auth.ts
+msgid "Require SMS code"
+msgstr "Requerir código SMS"
 
 #: packages/ui/primitives/document-flow/field-items-advanced-settings/checkbox-field.tsx
 #: packages/ui/primitives/document-flow/field-items-advanced-settings/dropdown-field.tsx
@@ -10077,6 +10139,10 @@ msgstr "Reenviar"
 #: apps/remix/app/components/general/document-signing/access-auth-2fa-form.tsx
 msgid "Resend code"
 msgstr "Reenviar código"
+
+#: apps/remix/app/components/general/document-signing/document-signing-auth-sms.tsx
+msgid "Resend code by SMS"
+msgstr "Reenviar código por SMS"
 
 #: apps/remix/app/components/general/verify-email-banner.tsx
 msgid "Resend Confirmation Email"
@@ -10703,6 +10769,10 @@ msgstr "Envía un correo de prueba usando este transporte para verificar la conf
 msgid "Send a test webhook with sample data to verify your integration is working correctly."
 msgstr "Envía un webhook de prueba con datos de muestra para verificar que tu integración esté funcionando correctamente."
 
+#: apps/remix/app/components/general/document-signing/document-signing-auth-sms.tsx
+msgid "Send code by SMS"
+msgstr "Enviar código por SMS"
+
 #: apps/remix/app/components/forms/send-confirmation-email.tsx
 msgid "Send confirmation email"
 msgstr "Enviar correo de confirmación"
@@ -11311,6 +11381,26 @@ msgstr "Configuraciones del sitio"
 #: apps/remix/app/components/dialogs/ai-recipient-detection-dialog.tsx
 msgid "Skip"
 msgstr "Omitir"
+
+#: apps/remix/app/components/general/document-signing/document-signing-auth-dialog.tsx
+msgid "SMS"
+msgstr ""
+
+#: apps/remix/app/routes/_internal+/[__htmltopdf]+/certificate.tsx
+#: packages/lib/server-only/pdf/generate-certificate-pdf.ts
+msgid "SMS code verification"
+msgstr "Verificación mediante código SMS"
+
+#: apps/remix/app/components/general/document-signing/document-signing-auth-sms.tsx
+msgid "SMS could not be sent"
+msgstr "No se pudo enviar el SMS"
+
+#. placeholder {0}: data.phoneNumber
+#: packages/lib/utils/document-audit-logs.ts
+#: packages/lib/utils/document-audit-logs.ts
+#: packages/lib/utils/document-audit-logs.ts
+msgid "SMS verification code sent to {0}"
+msgstr "Código de verificación por SMS enviado a {0}"
 
 #: apps/remix/app/components/dialogs/envelope-distribute-dialog.tsx
 #: apps/remix/app/components/general/envelope-editor/envelope-editor-fields-page.tsx
@@ -12182,6 +12272,10 @@ msgstr "Los métodos de autenticación necesarios para que los destinatarios fir
 msgid "The authentication methods required for recipients to view the document."
 msgstr "Los métodos de autenticación necesarios para que los destinatarios vean el documento."
 
+#: apps/remix/app/components/general/document-signing/document-signing-auth-sms.tsx
+msgid "The code is incorrect, expired, or has exceeded the maximum number of attempts"
+msgstr "El código es incorrecto, ha caducado o ha superado el número máximo de intentos"
+
 #: apps/remix/app/components/general/admin-site-banner-section.tsx
 msgid "The content to show in the banner, HTML is allowed"
 msgstr "El contenido que se mostrará en el banner, se permite HTML"
@@ -12397,6 +12491,10 @@ msgstr ""
 #: apps/remix/app/components/general/admin-license-card.tsx
 msgid "The license key has been copied to your clipboard"
 msgstr ""
+
+#: apps/remix/app/components/general/document-signing/document-signing-auth-sms.tsx
+msgid "The maximum of 3 SMS sends has been reached"
+msgstr "Se ha alcanzado el máximo de 3 envíos por SMS"
 
 #. placeholder {0}: form.watch('name')
 #. placeholder {1}: form.watch('email')
@@ -13378,6 +13476,10 @@ msgstr ""
 msgid "Try again"
 msgstr "Intentar de nuevo"
 
+#: apps/remix/app/components/general/document-signing/document-signing-auth-sms.tsx
+msgid "Try again later"
+msgstr "Inténtalo de nuevo más tarde"
+
 #: apps/remix/app/components/dialogs/ai-features-enable-dialog.tsx
 msgid "Turn on AI detection to automatically find recipients and fields in your documents. AI providers do not retain your data for training."
 msgstr "Activa la detección por IA para encontrar automáticamente destinatarios y campos en tus documentos. Los proveedores de IA no conservan tus datos para entrenamiento."
@@ -13933,6 +14035,10 @@ msgstr ""
 msgid "Use a unique window for each rate limit"
 msgstr ""
 
+#: packages/lib/types/sms.ts
+msgid "Use an international phone number in E.164 format"
+msgstr "Usa un número de teléfono internacional en formato E.164"
+
 #: apps/remix/app/components/dialogs/token-create-dialog.tsx
 msgid "Use API tokens to authenticate with the Documenso API."
 msgstr ""
@@ -14063,6 +14169,10 @@ msgstr "Correo electrónico de verificación enviado con éxito."
 #: apps/remix/app/components/general/document-signing/access-auth-2fa-form.tsx
 msgid "Verify & Complete"
 msgstr "Verificar y completar"
+
+#: apps/remix/app/components/general/document-signing/document-signing-auth-sms.tsx
+msgid "Verify and sign"
+msgstr "Verificar y firmar"
 
 #: apps/remix/app/components/dialogs/organisation-email-domain-records-dialog.tsx
 msgid "Verify Domain"
@@ -14321,6 +14431,10 @@ msgstr ""
 #: apps/remix/app/components/general/analytics/analytics-overview-cards.tsx
 msgid "vs. previous period"
 msgstr ""
+
+#: apps/remix/app/components/general/document-signing/document-signing-auth-sms.tsx
+msgid "Wait 60 seconds before requesting another code"
+msgstr "Espera 60 segundos antes de solicitar otro código"
 
 #: apps/remix/app/components/general/stack-avatars-with-tooltip.tsx
 msgid "Waiting"
@@ -15755,6 +15869,10 @@ msgid "You validated a 2FA token for the document"
 msgstr "Has validado un token 2FA para el documento"
 
 #: packages/lib/utils/document-audit-logs.ts
+msgid "You verified the SMS code"
+msgstr "Verificaste el código SMS"
+
+#: packages/lib/utils/document-audit-logs.ts
 #: packages/lib/utils/document-audit-logs.ts
 msgid "You viewed the document"
 msgstr "Has visto el documento"
@@ -16184,6 +16302,10 @@ msgstr "Tu proveedor de firma no devolvió credenciales utilizables para esta cu
 #: apps/remix/app/components/embed/embed-recipient-expired.tsx
 msgid "Your signing window for this document has expired. Please contact the sender for a new invitation."
 msgstr "Tu ventana de firma para este documento ha vencido. Ponte en contacto con el remitente para recibir una nueva invitación."
+
+#: packages/lib/utils/document-audit-logs.ts
+msgid "Your SMS verification failed"
+msgstr "Tu verificación por SMS falló"
 
 #: apps/remix/app/components/forms/support-ticket-form.tsx
 msgid "Your support request has been submitted. We'll get back to you soon!"

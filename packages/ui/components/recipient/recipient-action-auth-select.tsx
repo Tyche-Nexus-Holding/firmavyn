@@ -15,6 +15,8 @@ export interface RecipientActionAuthSelectProps {
   onValueChange?: (value: string[]) => void;
   disabled?: boolean;
   placeholder?: string;
+  allowSms?: boolean;
+  allowEnterpriseActionAuth?: boolean;
 }
 
 export const RecipientActionAuthSelect = ({
@@ -23,6 +25,8 @@ export const RecipientActionAuthSelect = ({
   onValueChange,
   disabled,
   placeholder,
+  allowSms = false,
+  allowEnterpriseActionAuth = false,
 }: RecipientActionAuthSelectProps) => {
   const { _ } = useLingui();
 
@@ -33,10 +37,17 @@ export const RecipientActionAuthSelect = ({
       label: _(msg`Inherit authentication method`),
     },
     ...Object.values(RecipientActionAuth)
-      .filter((auth) => auth !== RecipientActionAuth.ACCOUNT)
+      .filter(
+        (auth) =>
+          auth !== RecipientActionAuth.ACCOUNT && (auth === RecipientActionAuth.SMS || allowEnterpriseActionAuth),
+      )
       .map((authType) => ({
         value: authType,
-        label: _(DOCUMENT_AUTH_TYPES[authType].value),
+        label:
+          authType === RecipientActionAuth.SMS && !allowSms
+            ? `${_(DOCUMENT_AUTH_TYPES[authType].value)} — ${_(msg`Available on the Basic plan`)}`
+            : _(DOCUMENT_AUTH_TYPES[authType].value),
+        disable: authType === RecipientActionAuth.SMS && !allowSms,
       })),
   ];
 
@@ -96,6 +107,11 @@ export const RecipientActionAuthSelect = ({
               <Trans>
                 <strong>Inherit authentication method</strong> - Use the global action signing authentication method
                 configured in the "General Settings" step
+              </Trans>
+            </li>
+            <li>
+              <Trans>
+                <strong>Require SMS code</strong> - Send a 6-digit code to the recipient's phone
               </Trans>
             </li>
             <li>

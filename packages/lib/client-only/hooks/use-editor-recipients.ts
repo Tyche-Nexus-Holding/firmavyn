@@ -1,8 +1,14 @@
 import { IS_INSTANCE_CSC_MODE } from '@documenso/lib/constants/app';
-import { ZRecipientActionAuthTypesSchema, ZRecipientAuthOptionsSchema } from '@documenso/lib/types/document-auth';
+import {
+  DocumentAuth,
+  ZRecipientActionAuthTypesSchema,
+  ZRecipientAuthOptionsSchema,
+} from '@documenso/lib/types/document-auth';
 import type { TEditorEnvelope } from '@documenso/lib/types/envelope-editor';
 import { ZRecipientEmailSchema } from '@documenso/lib/types/recipient';
+import { ZSmsPhoneNumberInputSchema } from '@documenso/lib/types/sms';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { msg } from '@lingui/core/macro';
 import { DocumentSigningOrder, EnvelopeType, RecipientRole } from '@prisma/client';
 import { useId } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
@@ -16,6 +22,7 @@ const LocalRecipientSchema = z.object({
   formId: z.string().min(1),
   id: z.number().optional(),
   email: ZRecipientEmailSchema,
+  phone: ZSmsPhoneNumberInputSchema.default(''),
   name: z.string(),
   role: z.nativeEnum(RecipientRole),
   signingOrder: z.number().optional(),
@@ -37,6 +44,16 @@ export const ZEditorRecipientsFormSchema = z
     allowDictateNextSigner: z.boolean().default(false),
   })
   .superRefine((data, ctx) => {
+    data.signers.forEach((signer, index) => {
+      if (signer.actionAuth.includes(DocumentAuth.SMS) && !signer.phone) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: msg`A phone number is required for SMS verification`.id,
+          path: ['signers', index, 'phone'],
+        });
+      }
+    });
+
     if (!IS_INSTANCE_CSC_MODE()) {
       return;
     }
@@ -120,6 +137,10 @@ export const updateEditorSigners = (
       form.setValue(`signers.${index}.email`, signer.email, { shouldDirty: true });
     }
 
+    if (previousSigner.phone !== signer.phone) {
+      form.setValue(`signers.${index}.phone`, signer.phone, { shouldDirty: true });
+    }
+
     if (previousSigner.name !== signer.name) {
       form.setValue(`signers.${index}.name`, signer.name, { shouldDirty: true });
     }
@@ -179,6 +200,7 @@ export const useEditorRecipients = ({ envelope }: EditorRecipientsProps): UseEdi
       formId: String(recipient.id),
       name: recipient.name,
       email: recipient.email,
+      phone: recipient.phone ?? '',
       role: recipient.role,
       signingOrder: isCcRecipient(recipient) ? undefined : (recipient.signingOrder ?? undefined),
       actionAuth: ZRecipientAuthOptionsSchema.parse(recipient.authOptions)?.actionAuth ?? undefined,
@@ -192,6 +214,7 @@ export const useEditorRecipients = ({ envelope }: EditorRecipientsProps): UseEdi
               formId: initialId,
               name: '',
               email: '',
+              phone: '',
               role: RecipientRole.SIGNER,
               signingOrder: 1,
               actionAuth: [],
