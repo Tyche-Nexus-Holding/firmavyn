@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { hashSmsOtpCode, verifySmsOtpCodeHash } from './otp-code';
-import { evaluateSmsOtpAttempt, getSmsOtpSendBlockReason } from './otp-policy';
+import { evaluateSmsOtpAttempt, reserveSmsOtpSend } from './otp-policy';
 
 const now = new Date('2026-11-18T10:00:00.000Z');
 
@@ -52,7 +52,31 @@ describe('SMS OTP policy', () => {
 
   it('blocks resending before 60 seconds', () => {
     expect(
-      getSmsOtpSendBlockReason({ state: { sendCount: 1, lastSentAt: new Date('2026-11-18T09:59:01.000Z') }, now }),
-    ).toBe('resend-too-soon');
+      reserveSmsOtpSend({
+        state: { attemptCount: 0, sendCount: 1, lastSentAt: new Date('2026-11-18T09:59:01.000Z') },
+        now,
+      }),
+    ).toEqual({ allowed: false, reason: 'resend-too-soon' });
+  });
+
+  it('does not reserve more than three sends', () => {
+    expect(
+      reserveSmsOtpSend({
+        state: { attemptCount: 0, sendCount: 3, lastSentAt: new Date('2026-11-18T09:58:00.000Z') },
+        now,
+      }),
+    ).toEqual({ allowed: false, reason: 'too-many-sends' });
+  });
+
+  it('resets the attempt count when reserving a new code', () => {
+    expect(
+      reserveSmsOtpSend({
+        state: { attemptCount: 4, sendCount: 1, lastSentAt: new Date('2026-11-18T09:58:59.000Z') },
+        now,
+      }),
+    ).toEqual({
+      allowed: true,
+      state: { attemptCount: 0, sendCount: 2, lastSentAt: now },
+    });
   });
 });
