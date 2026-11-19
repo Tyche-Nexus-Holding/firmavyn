@@ -37,6 +37,16 @@ export type SmsOtpSendState = {
 
 export type SmsOtpSendBlockReason = 'too-many-sends' | 'resend-too-soon' | null;
 
+export type SmsOtpSendReservationResult =
+  | {
+      allowed: false;
+      reason: Exclude<SmsOtpSendBlockReason, null>;
+    }
+  | {
+      allowed: true;
+      state: SmsOtpSendState & { attemptCount: 0 };
+    };
+
 export const getSmsOtpSendBlockReason = ({
   state,
   now = new Date(),
@@ -53,4 +63,27 @@ export const getSmsOtpSendBlockReason = ({
   }
 
   return null;
+};
+
+export const reserveSmsOtpSend = ({
+  state,
+  now = new Date(),
+}: {
+  state: SmsOtpSendState & { attemptCount: number };
+  now?: Date;
+}): SmsOtpSendReservationResult => {
+  const reason = getSmsOtpSendBlockReason({ state, now });
+
+  if (reason) {
+    return { allowed: false, reason };
+  }
+
+  return {
+    allowed: true,
+    state: {
+      attemptCount: 0,
+      sendCount: state.sendCount + 1,
+      lastSentAt: now,
+    },
+  };
 };
